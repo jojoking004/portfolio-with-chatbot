@@ -81,6 +81,7 @@
       opacity: 0.8;
       color: white;
       text-decoration: none;
+      z-index: 1;
     }
     
     .nav-item:hover {
@@ -152,18 +153,20 @@
       right: 50px;
       bottom: 100px;
       width: 400px;
-      z-index: 100;
+      z-index: -100;
+
     }
     
     .project-card {
       background: rgba(20, 20, 30, 0.7);
       border-radius: 15px;
       padding: 20px;
-      margin-bottom: 20px;
+margin-bottom: 5px;
       transition: all 0.3s ease;
       pointer-events: auto;
       cursor: pointer;
       border: 1px solid rgba(255, 255, 255, 0.1);
+      
     }
     
     .project-card:hover {
