@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SYED  JUNAID | Portfolio</title>
+  <title>SYED JUNAID | Portfolio</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -12,10 +14,11 @@
     }
     
     body {
-      overflow: hidden;
+      overflow-x: hidden;
       font-family: 'Montserrat', sans-serif;
       color: white;
       background: #000;
+      min-height: 100vh;
     }
     
     #canvas-container {
@@ -76,11 +79,14 @@
       transition: all 0.3s ease;
       position: relative;
       opacity: 0.8;
+      color: white;
+      text-decoration: none;
     }
     
     .nav-item:hover {
       opacity: 1;
       transform: translateY(-3px);
+      color: white;
     }
     
     .nav-item::after {
@@ -151,7 +157,6 @@
     
     .project-card {
       background: rgba(20, 20, 30, 0.7);
-     
       border-radius: 15px;
       padding: 20px;
       margin-bottom: 20px;
@@ -192,15 +197,6 @@
       font-size: 0.8rem;
     }
     
-    .particles {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
-    
     .particle {
       position: absolute;
       width: 4px;
@@ -211,25 +207,142 @@
       box-shadow: 0 0 10px white;
     }
     
-    @media (max-width: 768px) {
-      .header, .content {
-        left: 20px;
-      }
-      
-      .nav {
-        right: 20px;
-        gap: 15px;
+    /* Mobile Navigation */
+    .mobile-nav-btn {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(106, 0, 255, 0.5);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+    
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 999;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      pointer-events: auto;
+    }
+    
+    .mobile-nav .nav-item {
+      font-size: 1.5rem;
+      margin: 15px 0;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 1200px) {
+      .content h2 {
+        font-size: 2.5rem;
       }
       
       .projects {
-        right: 20px;
-        width: calc(100% - 40px);
-        bottom: 50px;
+        width: 350px;
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .header, .content {
+        left: 30px;
+      }
+      
+      .nav {
+        right: 30px;
+        gap: 20px;
+      }
+      
+      .projects {
+        right: 30px;
+        width: 300px;
+      }
+      
+      .content h2 {
+        font-size: 2.2rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .header {
+        top: 20px;
+        left: 20px;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .header p {
+        font-size: 1rem;
+      }
+      
+      .nav {
+        display: none;
+      }
+      
+      .mobile-nav-btn {
+        display: block;
       }
       
       .content {
-        bottom: 400px;
-        max-width: calc(100% - 40px);
+        position: relative;
+        left: auto;
+        bottom: auto;
+        max-width: 100%;
+        padding: 20px;
+        margin-top: 100px;
+      }
+      
+      .content h2 {
+        font-size: 2rem;
+      }
+      
+      .content p {
+        font-size: 1rem;
+      }
+      
+      .projects {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        width: 100%;
+        padding: 20px;
+        margin-top: 30px;
+      }
+      
+      .project-card {
+        margin-bottom: 15px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .content h2 {
+        font-size: 1.8rem;
+      }
+      
+      .btn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+      }
+      
+      .mobile-nav .nav-item {
+        font-size: 1.2rem;
       }
     }
   </style>
@@ -243,57 +356,80 @@
     
     <div class="header">
       <h1>SYED</h1>
-      <p> Developer & Creative Technologist</p>
+      <p>Developer & Creative Technologist</p>
     </div>
     
-    <div class="nav">
-      <a href="intro.HTML"><div class="nav-item">WORK</div></a>
-      <a href="aboutus.html"><div class="nav-item">ABOUT</div></a>
-     <a href="skills.html"> <div class="nav-item">SKILLS</div></a>
-      <a href="portfolio-2.html"><div class="nav-item">CONTACT</div></a>
-      <a href="help.html"><div class="nav-item">chatbot</div></a>
+    <!-- Desktop Navigation -->
+    <div class="nav d-none d-md-flex">
+      <a href="intro.HTML" class="nav-item">WORK</a>
+      <a href="aboutus.html" class="nav-item">ABOUT</a>
+      <a href="skills.html" class="nav-item">SKILLS</a>
+      <a href="portfolio-2.html" class="nav-item">CONTACT</a>
+      <a href="help.html" class="nav-item">chatbot</a>
     </div>
-
     
-    <div class="content">
-      <h2>BUILDING THE FUTURE</h2>
-      <p>I create immersive digital experiences that push boundaries and captivate audiences. My work blends cutting-edge technology with stunning visuals to deliver unforgettable interactions.</p>
-     <a href="intro.HTML"> <button class="btn">EXPLORE MY WORK</button></a>
+    <!-- Mobile Navigation Button -->
+    <button class="mobile-nav-btn d-md-none" id="mobileNavBtn">
+      ☰
+    </button>
+    
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav d-md-none" id="mobileNav">
+      <a href="intro.HTML" class="nav-item">WORK</a>
+      <a href="aboutus.html" class="nav-item">ABOUT</a>
+      <a href="skills.html" class="nav-item">SKILLS</a>
+      <a href="portfolio-2.html" class="nav-item">CONTACT</a>
+      <a href="help.html" class="nav-item">chatbot</a>
     </div>
-    <br><br><br><br><br>
-    <div class="projects">
-      <div class="project-card">
-        <h3>Cosmic Escape</h3>
-        <p>An immersive 3D journey through space and time</p>
-        <div class="tags">
-          <div class="tag">Three.js</div>
-          <div class="tag">WebGL</div>
-          <div class="tag">GSAP</div>
+    
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-6 col-md-12">
+          <div class="content">
+            <h2>BUILDING THE FUTURE</h2>
+            <p>I create immersive digital experiences that push boundaries and captivate audiences. My work blends cutting-edge technology with stunning visuals to deliver unforgettable interactions.</p>
+            <a href="intro.HTML"><button class="btn">EXPLORE MY WORK</button></a>
+          </div>
         </div>
-      </div>
-      
-      <div class="project-card">
-        <h3>Neon Dreams</h3>
-        <p>Interactive music visualization engine</p>
-        <div class="tags">
-          <div class="tag">JavaScript</div>
-          <div class="tag">WebAudio</div>
-          <div class="tag">Shaders</div>
-        </div>
-      </div>
-      
-      <div class="project-card">
-        <h3>Quantum Interface</h3>
-        <p>Next-gen UI framework for spatial computing</p>
-        <div class="tags">
-          <div class="tag">React</div>
-          <div class="tag">Three.js</div>
-          <div class="tag">XR</div>
+        <div class="col-lg-6 col-md-12">
+          <div class="projects">
+            <div class="project-card">
+              <h3>Cosmic Escape</h3>
+              <p>An immersive 3D journey through space and time</p>
+              <div class="tags">
+                <div class="tag">Three.js</div>
+                <div class="tag">WebGL</div>
+                <div class="tag">GSAP</div>
+              </div>
+            </div>
+            
+            <div class="project-card">
+              <h3>Neon Dreams</h3>
+              <p>Interactive music visualization engine</p>
+              <div class="tags">
+                <div class="tag">JavaScript</div>
+                <div class="tag">WebAudio</div>
+                <div class="tag">Shaders</div>
+              </div>
+            </div>
+            
+            <div class="project-card">
+              <h3>Quantum Interface</h3>
+              <p>Next-gen UI framework for spatial computing</p>
+              <div class="tags">
+                <div class="tag">React</div>
+                <div class="tag">Three.js</div>
+                <div class="tag">XR</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
@@ -569,6 +705,28 @@
     
     // Initialize everything
     init();
+    
+    // Mobile navigation toggle
+    const mobileNavBtn = document.getElementById('mobileNavBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    
+    mobileNavBtn.addEventListener('click', () => {
+      if (mobileNav.style.display === 'flex') {
+        mobileNav.style.display = 'none';
+        mobileNavBtn.innerHTML = '☰';
+      } else {
+        mobileNav.style.display = 'flex';
+        mobileNavBtn.innerHTML = '✕';
+      }
+    });
+    
+    // Close mobile nav when clicking a link
+    document.querySelectorAll('.mobile-nav .nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        mobileNav.style.display = 'none';
+        mobileNavBtn.innerHTML = '☰';
+      });
+    });
     
     // Add interactivity to UI elements
     document.querySelectorAll('.nav-item').forEach(item => {
