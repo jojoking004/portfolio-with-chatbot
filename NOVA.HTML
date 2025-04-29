@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova AI Assistant</title>
+    <title>Nova AI Coding Assistant</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
     <style>
         * {
             margin: 0;
@@ -334,6 +335,115 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        /* Code Block Styling */
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .copy-btn {
+            background: rgba(106, 0, 255, 0.3);
+            border: none;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(106, 0, 255, 0.5);
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        /* Language Tabs */
+        .language-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .language-tab {
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .language-tab.active {
+            background: rgba(106, 0, 255, 0.3);
+        }
+        .nova-chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+    /* Remove the mask-image gradient */
+    /* mask-image: none; */
+    padding-bottom: 10px;
+    /* Ensure scrollbar is always visible */
+    overflow-y: scroll;
+    /* Add these properties for better scrollbar behavior */
+    height: 100%;
+    max-height: calc(100vh - 180px); /* Adjust based on your header/footer heights */
+}
+
+        ::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(106, 0, 255, 0.3);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(106, 0, 255, 0.5);
+}
+        /* Concept Cards */
+        .concept-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 3px solid #6a00ff;
+        }
+
+        .concept-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #00d4ff;
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -388,6 +498,7 @@
     </style>
 </head>
 <body>
+    
     <!-- Sidebar -->
     <div class="nova-sidebar" id="novaSidebar">
         <div class="nova-sidebar-header">
@@ -395,25 +506,49 @@
                 <i class="fas fa-robot"></i>
             </div>
             <div class="nova-sidebar-title">
-                <h2>Nova Assistant</h2>
-                <p>AI-Powered Helper</p>
+                <h2>Nova Coding Assistant</h2>
+                <p>AI-Powered Developer</p>
             </div>
         </div>
         
         <div class="nova-sidebar-menu">
             <div class="nova-sidebar-item" data-panel="chat">
                 <i class="fas fa-comment-dots"></i>
-                <span>Chat</span>
+                <span>Interactive Coding</span>
             </div>
             
-            <div class="nova-sidebar-item" data-panel="functions">
-                <i class="fas fa-cogs"></i>
-                <span>Functions</span>
+            <div class="nova-sidebar-divider"></div>
+            
+            <div class="nova-sidebar-item" data-panel="html">
+                <i class="fab fa-html5"></i>
+                <span>HTML Guide</span>
             </div>
             
-            <div class="nova-sidebar-item" data-panel="knowledge">
-                <i class="fas fa-book"></i>
-                <span>Knowledge Base</span>
+            <div class="nova-sidebar-item" data-panel="css">
+                <i class="fab fa-css3-alt"></i>
+                <span>CSS Guide</span>
+            </div>
+            
+            <div class="nova-sidebar-item" data-panel="js">
+                <i class="fab fa-js"></i>
+                <span>JavaScript Guide</span>
+            </div>
+            
+            <div class="nova-sidebar-item" data-panel="bootstrap">
+                <i class="fab fa-bootstrap"></i>
+                <span>Bootstrap Guide</span>
+            </div>
+            
+            <div class="nova-sidebar-divider"></div>
+            
+            <div class="nova-sidebar-item" data-panel="backend">
+                <i class="fas fa-server"></i>
+                <span>Backend Development</span>
+            </div>
+            
+            <div class="nova-sidebar-item" data-panel="frameworks">
+                <i class="fas fa-project-diagram"></i>
+                <span>Frameworks</span>
             </div>
             
             <div class="nova-sidebar-divider"></div>
@@ -421,11 +556,6 @@
             <div class="nova-sidebar-item" data-panel="settings">
                 <i class="fas fa-cog"></i>
                 <span>Settings</span>
-            </div>
-            
-            <div class="nova-sidebar-item" data-panel="help">
-                <i class="fas fa-question-circle"></i>
-                <span>Help & Support</span>
             </div>
         </div>
     </div>
@@ -438,15 +568,15 @@
                 <i class="fas fa-bars"></i>
             </div>
             <div class="nova-chat-title">
-                <h2 id="currentPanelTitle">Chat</h2>
-                <p id="currentPanelSubtitle">Ask me anything</p>
+                <h2 id="currentPanelTitle">Interactive Coding</h2>
+                <p id="currentPanelSubtitle">Ask me anything about programming</p>
             </div>
             <div class="nova-chat-actions">
                 <div class="nova-chat-action" id="toggleDarkMode">
                     <i class="fas fa-moon"></i>
                 </div>
-                <div class="nova-chat-action">
-                    <i class="fas fa-ellipsis-v"></i>
+                <div class="nova-chat-action" id="clearChat">
+                    <i class="fas fa-trash"></i>
                 </div>
             </div>
         </div>
@@ -455,53 +585,211 @@
         <div class="function-panel active" id="chatPanel">
             <div class="nova-chat-messages" id="novaMessages"></div>
             <div class="nova-chat-input">
-                <input type="text" id="novaInput" placeholder="Ask me anything...">
+                <input type="text" id="novaInput" placeholder="Ask me anything about coding...">
                 <button id="novaSend"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
 
-        <!-- Functions Panel -->
-        <div class="function-panel" id="functionsPanel">
-            <div class="function-title">Available Functions</div>
-            <div class="nova-sidebar-menu">
-                <div class="nova-sidebar-item" data-command="Show my projects">
-                    <i class="fas fa-project-diagram"></i>
-                    <span>Project Explorer</span>
+        <!-- HTML Guide Panel -->
+        <div class="function-panel" id="htmlPanel">
+            <div class="function-title">HTML Learning Resources</div>
+            <div class="concept-card">
+                <div class="concept-title">HTML Basics</div>
+                <p>HTML (HyperText Markup Language) is the standard markup language for creating web pages.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain HTML structure">Structure</div>
+                    <div class="quick-reply" data-command="Show HTML5 features">HTML5 Features</div>
+                    <div class="quick-reply" data-command="Give me an HTML template">Basic Template</div>
                 </div>
-                <div class="nova-sidebar-item" data-command="Show code examples">
-                    <i class="fas fa-code"></i>
-                    <span>Code Examples</span>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-title">HTML Elements</div>
+                <p>Learn about common HTML elements and their usage.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain semantic HTML">Semantic Elements</div>
+                    <div class="quick-reply" data-command="Show form elements">Form Elements</div>
+                    <div class="quick-reply" data-command="List common HTML tags">Common Tags</div>
                 </div>
-                <div class="nova-sidebar-item" data-command="Explain three.js">
-                    <i class="fas fa-cube"></i>
-                    <span>3D Concepts</span>
-                </div>
-                <div class="nova-sidebar-item" data-command="Show contact information">
-                    <i class="fas fa-address-card"></i>
-                    <span>Contact Info</span>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-title">HTML Advanced</div>
+                <p>Dive deeper into HTML concepts and best practices.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain HTML accessibility">Accessibility</div>
+                    <div class="quick-reply" data-command="Show HTML meta tags">Meta Tags</div>
+                    <div class="quick-reply" data-command="Explain HTML entities">HTML Entities</div>
                 </div>
             </div>
         </div>
 
-        <!-- Knowledge Base Panel -->
-        <div class="function-panel" id="knowledgePanel">
-            <div class="function-title">Knowledge Base</div>
-            <div class="nova-sidebar-menu">
-                <div class="nova-sidebar-item" data-command="Explain web development">
-                    <i class="fas fa-globe"></i>
-                    <span>Web Development</span>
+        <!-- CSS Guide Panel -->
+        <div class="function-panel" id="cssPanel">
+            <div class="function-title">CSS Learning Resources</div>
+            <div class="concept-card">
+                <div class="concept-title">CSS Basics</div>
+                <p>CSS (Cascading Style Sheets) is used to style and layout web pages.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain CSS syntax">Syntax</div>
+                    <div class="quick-reply" data-command="Show CSS selectors">Selectors</div>
+                    <div class="quick-reply" data-command="Explain the box model">Box Model</div>
                 </div>
-                <div class="nova-sidebar-item" data-command="Tell me about three.js">
-                    <i class="fas fa-cubes"></i>
-                    <span>Three.js Guide</span>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-title">CSS Layout</div>
+                <p>Modern techniques for creating responsive layouts.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain Flexbox">Flexbox</div>
+                    <div class="quick-reply" data-command="Explain CSS Grid">CSS Grid</div>
+                    <div class="quick-reply" data-command="Compare Flexbox and Grid">Flexbox vs Grid</div>
                 </div>
-                <div class="nova-sidebar-item" data-command="Explain AI concepts">
-                    <i class="fas fa-brain"></i>
-                    <span>AI Concepts</span>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-title">CSS Advanced</div>
+                <p>Advanced CSS techniques and features.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain CSS variables">Variables</div>
+                    <div class="quick-reply" data-command="Show CSS animations">Animations</div>
+                    <div class="quick-reply" data-command="Explain media queries">Responsive Design</div>
                 </div>
-                <div class="nova-sidebar-item" data-command="Show design principles">
-                    <i class="fas fa-palette"></i>
-                    <span>Design Principles</span>
+            </div>
+        </div>
+
+        <!-- JavaScript Guide Panel -->
+        <div class="function-panel" id="jsPanel">
+            <div class="function-title">JavaScript Learning Resources</div>
+            <div class="concept-card">
+                <div class="concept-title">JavaScript Basics</div>
+                <p>JavaScript is the programming language of the web.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain JavaScript syntax">Syntax</div>
+                    <div class="quick-reply" data-command="Show JS data types">Data Types</div>
+                    <div class="quick-reply" data-command="Explain variables in JS">Variables</div>
+                </div>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-title">DOM Manipulation</div>
+                <p>How to interact with HTML elements using JavaScript.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain DOM selection">Selecting Elements</div>
+                    <div class="quick-reply" data-command="Show event handling">Event Handling</div>
+                    <div class="quick-reply" data-command="Explain DOM manipulation">DOM Manipulation</div>
+                </div>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-title">Advanced JS</div>
+                <p>Modern JavaScript features and patterns.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain ES6 features">ES6+ Features</div>
+                    <div class="quick-reply" data-command="Explain async JS">Async/Await</div>
+                    <div class="quick-reply" data-command="Explain closures">Closures</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap Guide Panel -->
+        <div class="function-panel" id="bootstrapPanel">
+            <div class="function-title">Bootstrap Learning Resources</div>
+            <div class="concept-card">
+                <div class="concept-title">Bootstrap Basics</div>
+                <p>Bootstrap is the most popular CSS framework for responsive web design.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain Bootstrap grid">Grid System</div>
+                    <div class="quick-reply" data-command="Show Bootstrap setup">Setup</div>
+                    <div class="quick-reply" data-command="Explain Bootstrap utilities">Utilities</div>
+                </div>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-title">Bootstrap Components</div>
+                <p>Pre-styled components for rapid UI development.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Show Bootstrap navbar">Navbar</div>
+                    <div class="quick-reply" data-command="Explain Bootstrap cards">Cards</div>
+                    <div class="quick-reply" data-command="Show Bootstrap forms">Forms</div>
+                </div>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-title">Bootstrap Customization</div>
+                <p>How to customize Bootstrap for your projects.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain Bootstrap theming">Theming</div>
+                    <div class="quick-reply" data-command="Show Bootstrap variables">Sass Variables</div>
+                    <div class="quick-reply" data-command="Explain Bootstrap build process">Custom Builds</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Backend Development Panel -->
+        <div class="function-panel" id="backendPanel">
+            <div class="function-title">Backend Development Resources</div>
+            <div class="concept-card">
+                <div class="concept-title">Node.js</div>
+                <p>JavaScript runtime built on Chrome's V8 JavaScript engine.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain Node.js basics">Node Basics</div>
+                    <div class="quick-reply" data-command="Show Express.js example">Express.js</div>
+                    <div class="quick-reply" data-command="Explain REST APIs">REST APIs</div>
+                </div>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-title">Databases</div>
+                <p>Storing and retrieving data for your applications.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain SQL vs NoSQL">SQL vs NoSQL</div>
+                    <div class="quick-reply" data-command="Show MongoDB example">MongoDB</div>
+                    <div class="quick-reply" data-command="Explain ORMs">ORMs</div>
+                </div>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-title">Authentication</div>
+                <p>Securing your applications and managing users.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain JWT">JWT</div>
+                    <div class="quick-reply" data-command="Show OAuth example">OAuth</div>
+                    <div class="quick-reply" data-command="Explain session management">Sessions</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Frameworks Panel -->
+        <div class="function-panel" id="frameworksPanel">
+            <div class="function-title">JavaScript Frameworks</div>
+            <div class="concept-card">
+                <div class="concept-title">React</div>
+                <p>A JavaScript library for building user interfaces.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain React components">Components</div>
+                    <div class="quick-reply" data-command="Show React hooks example">Hooks</div>
+                    <div class="quick-reply" data-command="Explain React state">State</div>
+                </div>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-title">Vue.js</div>
+                <p>The Progressive JavaScript Framework.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain Vue basics">Vue Basics</div>
+                    <div class="quick-reply" data-command="Show Vue directives">Directives</div>
+                    <div class="quick-reply" data-command="Explain Vuex">Vuex</div>
+                </div>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-title">Angular</div>
+                <p>A platform for building mobile and desktop web applications.</p>
+                <div class="quick-replies">
+                    <div class="quick-reply" data-command="Explain Angular modules">Modules</div>
+                    <div class="quick-reply" data-command="Show Angular components">Components</div>
+                    <div class="quick-reply" data-command="Explain Angular services">Services</div>
                 </div>
             </div>
         </div>
@@ -519,49 +807,22 @@
                     </label>
                 </div>
                 <div class="nova-sidebar-item">
-                    <i class="fas fa-bell"></i>
-                    <span>Notifications</span>
-                    <label class="switch" style="margin-left: auto;">
-                        <input type="checkbox" id="notificationsToggle" checked>
-                        <span class="slider round"></span>
-                    </label>
+                    <i class="fas fa-code"></i>
+                    <span>Code Theme</span>
+                    <select id="codeThemeSelect" style="margin-left: auto; background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 4px; padding: 5px;">
+                        <option value="atom-one-dark">Atom One Dark</option>
+                        <option value="github">GitHub</option>
+                        <option value="monokai">Monokai</option>
+                    </select>
                 </div>
                 <div class="nova-sidebar-divider"></div>
-                <div class="nova-sidebar-item">
-                    <i class="fas fa-database"></i>
+                <div class="nova-sidebar-item" id="clearHistoryBtn">
+                    <i class="fas fa-trash"></i>
                     <span>Clear Chat History</span>
                 </div>
-                <div class="nova-sidebar-item">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Sign Out</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Help Panel -->
-        <div class="function-panel" id="helpPanel">
-            <div class="function-title">Help & Support</div>
-            <div class="nova-sidebar-menu">
-                <div class="nova-sidebar-item">
-                    <i class="fas fa-question-circle"></i>
-                    <span>FAQ</span>
-                </div>
-                <div class="nova-sidebar-item">
-                    <i class="fas fa-book"></i>
-                    <span>Documentation</span>
-                </div>
-                <div class="nova-sidebar-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>Contact Support</span>
-                </div>
-                <div class="nova-sidebar-divider"></div>
-                <div class="nova-sidebar-item">
-                    <i class="fas fa-info-circle"></i>
-                    <span>About Nova</span>
-                </div>
-                <div class="nova-sidebar-item">
-                    <i class="fas fa-code-branch"></i>
-                    <span>Version 2.0.1</span>
+                <div class="nova-sidebar-item" id="exportChatBtn">
+                    <i class="fas fa-download"></i>
+                    <span>Export Chat</span>
                 </div>
             </div>
         </div>
@@ -619,6 +880,14 @@
 
         body.light-mode .quick-reply:hover {
             background: rgba(106, 0, 255, 0.1);
+        }
+
+        body.light-mode .concept-card {
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        body.light-mode .code-block {
+            background: rgba(0, 0, 0, 0.05);
         }
 
         body.light-mode ::-webkit-scrollbar-track {
@@ -686,6 +955,10 @@
         }
     </style>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/css.min.js"></script>
     <script>
         // DOM Elements
         const novaSidebar = document.getElementById('novaSidebar');
@@ -697,14 +970,21 @@
         const toggleDarkMode = document.getElementById('toggleDarkMode');
         const currentPanelTitle = document.getElementById('currentPanelTitle');
         const currentPanelSubtitle = document.getElementById('currentPanelSubtitle');
+        const clearChat = document.getElementById('clearChat');
+        const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+        const exportChatBtn = document.getElementById('exportChatBtn');
+        const codeThemeSelect = document.getElementById('codeThemeSelect');
     
         // Panels
         const panels = {
             chat: document.getElementById('chatPanel'),
-            functions: document.getElementById('functionsPanel'),
-            knowledge: document.getElementById('knowledgePanel'),
-            settings: document.getElementById('settingsPanel'),
-            help: document.getElementById('helpPanel')
+            html: document.getElementById('htmlPanel'),
+            css: document.getElementById('cssPanel'),
+            js: document.getElementById('jsPanel'),
+            bootstrap: document.getElementById('bootstrapPanel'),
+            backend: document.getElementById('backendPanel'),
+            frameworks: document.getElementById('frameworksPanel'),
+            settings: document.getElementById('settingsPanel')
         };
     
         // Enhanced Config
@@ -719,9 +999,9 @@
                 "That's an interesting question. I need to verify some details before providing a complete response."
             ],
             welcomeMessages: [
-                "Hello! I'm Nova, your professional AI assistant. How may I assist you today?",
-                "Good day! I'm Nova, ready to help with any questions or tasks you have.",
-                "Welcome! I'm Nova, an AI assistant designed to provide professional support. What can I do for you?"
+                "Hello! I'm Nova, your coding assistant. How can I help you with your programming questions today?",
+                "Hi there! I'm Nova, ready to help with HTML, CSS, JavaScript, and more. What would you like to learn?",
+                "Welcome! I'm Nova, your AI programming tutor. Ask me anything about web development!"
             ],
             userContext: {
                 name: null,
@@ -731,450 +1011,279 @@
         };
     
         // State
-        let isFirstInteraction = true;
-        let conversationContext = {
-            currentTopic: null,
-            previousQuestions: []
-        };
-        let isUserScrolling = false;
-        let scrollTimeout = null;
-        let shouldAutoScroll = true;
-    
-        // Knowledge Base (expanded)
-        const knowledgeBase = {
-            projects: {
-                title: "My Projects",
-                description: "Here are some of my notable projects:",
-                items: [
-                    {
-                        name: "Cosmic Explorer",
-                        description: "An interactive 3D visualization of our solar system with accurate planetary physics and detailed surface textures.",
-                        technologies: ["Three.js", "WebGL", "GSAP"]
-                    },
-                    {
-                        name: "Neon Dreams",
-                        description: "A music visualizer that transforms audio input into dynamic particle systems and light shows.",
-                        technologies: ["Web Audio API", "GLSL Shaders", "React"]
-                    },
-                    {
-                        name: "Quantum Interface",
-                        description: "Experimental spatial UI framework exploring 3D navigation paradigms for complex datasets.",
-                        technologies: ["Three.js", "React Three Fiber", "Blender"]
-                    }
-                ]
-            },
-            threejs: {
-                title: "Three.js Expertise",
-                description: "Three.js is a powerful JavaScript library for creating 3D graphics in the browser:",
-                keyPoints: [
-                    "Creates hardware-accelerated 3D graphics using WebGL",
-                    "Provides abstractions for cameras, lights, materials, and geometries",
-                    "Supports loading various 3D model formats (GLTF, OBJ, FBX)",
-                    "Includes utilities for animations, controls, and post-processing"
-                ],
-                resources: [
-                    "Official Documentation: threejs.org",
-                    "Learning Path: Discover Three.js by Lewy Blue",
-                    "Community: Three.js Slack and Forum"
-                ]
-            },
-            contact: {
-                title: "Contact Information",
-                description: "Here are the best ways to reach me:",
-                methods: [
-                    {
-                        type: "Email",
-                        value: "hello@novadev.com",
-                        responseTime: "Within 24 hours"
-                    },
-                    {
-                        type: "LinkedIn",
-                        value: "linkedin.com/in/novadev",
-                        responseTime: "Within 48 hours"
-                    },
-                    {
-                        type: "Twitter",
-                        value: "@novadev",
-                        responseTime: "Varies"
-                    }
-                ]
-            }
-        };
-    
-        // Initialize
-        function initNova() {
-            // Event Listeners
-            novaSend.addEventListener('click', sendMessage);
-            novaInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendMessage();
-            });
-    
-            // Sidebar navigation
-            document.querySelectorAll('.nova-sidebar-item[data-panel]').forEach(item => {
-                item.addEventListener('click', () => {
-                    const panelName = item.getAttribute('data-panel');
-                    showPanel(panelName);
-                    
-                    // Update title based on panel
-                    currentPanelTitle.textContent = item.querySelector('span').textContent;
-                    currentPanelSubtitle.textContent = getPanelSubtitle(panelName);
-                    
-                    // Close sidebar on mobile
-                    if (window.innerWidth <= 768) {
-                        novaSidebar.classList.remove('active');
-                    }
-                });
-            });
-    
-            // Function commands
-            document.querySelectorAll('.nova-sidebar-item[data-command]').forEach(item => {
-                item.addEventListener('click', () => {
-                    const command = item.getAttribute('data-command');
-                    showPanel('chat');
-                    currentPanelTitle.textContent = 'Chat';
-                    currentPanelSubtitle.textContent = 'Ask me anything';
-                    novaInput.value = command;
-                    sendMessage();
-                });
-            });
-    
-            // Toggle sidebar on mobile
-            toggleSidebar.addEventListener('click', () => {
-                novaSidebar.classList.toggle('active');
-            });
-    
-            // Dark mode toggle
-            darkModeToggle.addEventListener('change', toggleDarkModeHandler);
-            toggleDarkMode.addEventListener('click', () => {
-                darkModeToggle.checked = !darkModeToggle.checked;
-                toggleDarkModeHandler();
-            });
-            
-            // Track user scrolling behavior
-            novaMessages.addEventListener('scroll', handleUserScroll);
-            novaMessages.addEventListener('wheel', () => {
-                isUserScrolling = true;
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    isUserScrolling = false;
-                }, 1000);
-            });
-            novaMessages.addEventListener('touchmove', () => {
-                isUserScrolling = true;
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    isUserScrolling = false;
-                }, 1000);
-            });
-    
-            // Show welcome message after a delay
-            setTimeout(() => {
-                addMessage(getRandomWelcome(), 'bot');
-            }, 1000);
-        }
-    
-        // Handle user scroll events
-        function handleUserScroll() {
-            // Check if user has scrolled up
-            const threshold = 100; // pixels from bottom
-            const distanceToBottom = novaMessages.scrollHeight - novaMessages.scrollTop - novaMessages.clientHeight;
-            
-            // If user scrolls up beyond threshold, pause auto-scroll
-            shouldAutoScroll = distanceToBottom <= threshold;
-        }
-    
-        // Smart scroll function
-        function smartScrollToBottom() {
-            if (shouldAutoScroll && !isUserScrolling) {
-                novaMessages.scrollTo({
-                    top: novaMessages.scrollHeight,
-                    behavior: 'smooth'
-                });
-            }
-        }
-    
-        // Show Panel
-        function showPanel(panelName) {
-            // Hide all panels
-            Object.values(panels).forEach(panel => {
-                panel.classList.remove('active');
-            });
-            
-            // Show selected panel
-            if (panels[panelName]) {
-                panels[panelName].classList.add('active');
-            } else {
-                panels.chat.classList.add('active');
-            }
-        }
-    
-        // Get Panel Subtitle
-        function getPanelSubtitle(panelName) {
-            const subtitles = {
-                chat: 'Professional AI assistance',
-                functions: 'Execute specialized tasks',
-                knowledge: 'Structured information repository',
-                settings: 'Configure your experience',
-                help: 'Technical support and documentation'
-            };
-            return subtitles[panelName] || 'Professional AI assistance';
-        }
-    
-        // Toggle Dark Mode
-        function toggleDarkModeHandler() {
-            document.body.classList.toggle('light-mode', !darkModeToggle.checked);
-            const icon = toggleDarkMode.querySelector('i');
-            if (darkModeToggle.checked) {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-            } else {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            }
-        }
-    
-        // Send Message
-        function sendMessage() {
-            const text = novaInput.value.trim();
-            if (!text) return;
-    
-            addMessage(text, 'user');
-            novaInput.value = '';
-    
-            // Update conversation context
-            conversationContext.previousQuestions.push(text);
-            novaConfig.userContext.lastInteraction = new Date().toISOString();
-    
-            // Show typing indicator
-            showTyping();
-    
-            // Process after delay (simulating API call)
-            setTimeout(() => {
-                hideTyping();
-                const response = generateProfessionalResponse(text);
-                addMessage(response, 'bot');
-    
-                // Add quick replies if first interaction
-                if (isFirstInteraction) {
-                    addQuickReplies();
-                    isFirstInteraction = false;
-                }
-            }, 800 + Math.random() * 800);
-        }
-    
-        // Add Message with smooth scrolling and markdown support
-        function addMessage(text, type) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `nova-message nova-message-${type}`;
-            
-            // Simple markdown parsing for better formatting
-            const formattedText = text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // bold
-                .replace(/\*(.*?)\*/g, '<em>$1</em>') // italic
-                .replace(/\n/g, '<br>'); // line breaks
-                
-            messageDiv.innerHTML = formattedText;
-            novaMessages.appendChild(messageDiv);
-            
-            // Smooth scroll to bottom with smart scrolling logic
-            setTimeout(() => {
-                smartScrollToBottom();
-            }, 50);
-            
-            // Add a subtle "message received" animation
-            messageDiv.style.opacity = '0';
-            setTimeout(() => {
-                messageDiv.style.transition = 'opacity 0.3s ease';
-                messageDiv.style.opacity = '1';
-            }, 10);
-            
-            // Store in conversation history
-            novaConfig.userContext.conversationHistory.push({
-                type,
-                text,
-                timestamp: new Date().toISOString()
-            });
-        }
-    
-        // Show Typing Indicator with smooth scroll
-        function showTyping() {
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'typing-indicator';
-            typingDiv.innerHTML = `
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            `;
-            novaMessages.appendChild(typingDiv);
-            
-            setTimeout(() => {
-                smartScrollToBottom();
-            }, 50);
-        }
-    
-        // Hide Typing Indicator with smooth transition
-        function hideTyping() {
-            const typing = document.querySelector('.typing-indicator');
-            if (typing) {
-                typing.style.transition = 'opacity 0.3s ease';
-                typing.style.opacity = '0';
-                setTimeout(() => {
-                    typing.remove();
-                }, 300);
-            }
-        }
-    
-        // Generate Professional Response
-        function generateProfessionalResponse(input) {
-            const lowerInput = input.toLowerCase();
-            
-            // Check for greetings
-            if (/(hello|hi|hey|greetings|good\s(morning|afternoon|evening))/i.test(lowerInput)) {
-                const timeBasedGreeting = getTimeBasedGreeting();
-                return `${timeBasedGreeting} How may I assist you today?`;
-            }
-            
-            // Check for farewells
-            if (/(bye|goodbye|see\syou|farewell)/i.test(lowerInput)) {
-                return "Thank you for your time. Should you have any further questions, don't hesitate to reach out. Have a pleasant day!";
-            }
-            
-            // Check for thanks
-            if (/(thanks|thank\syou|appreciate)/i.test(lowerInput)) {
-                return "You're most welcome. It's my pleasure to assist. Is there anything else you'd like me to help with?";
-            }
-            
-            // Check for projects
-            if (/(projects|work|portfolio|showcase)/i.test(lowerInput)) {
-                return formatKnowledgeResponse(knowledgeBase.projects);
-            }
-            
-            // Check for Three.js
-            if (/(three\.js|three\sjs|3d|webgl|graphics)/i.test(lowerInput)) {
-                return formatKnowledgeResponse(knowledgeBase.threejs);
-            }
-            
-            // Check for contact
-            if (/(contact|reach|email|connect|linkedin|twitter)/i.test(lowerInput)) {
-                return formatKnowledgeResponse(knowledgeBase.contact);
-            }
-            
-            // Contextual follow-up detection
-            if (conversationContext.currentTopic) {
-                if (/(more|details|explain|elaborate)/i.test(lowerInput)) {
-                    return handleFollowUpQuestion(conversationContext.currentTopic);
-                }
-            }
-            
-            // Fallback response
-            return getRandomFallback();
-        }
-    
-        // Format Knowledge Response
-        function formatKnowledgeResponse(data) {
-            let response = `**${data.title}**\n${data.description}\n\n`;
-            
-            if (data.items) {
-                data.items.forEach((item, index) => {
-                    response += `${index + 1}. **${item.name}**: ${item.description}\n`;
-                    if (item.technologies) {
-                        response += `   *Technologies*: ${item.technologies.join(', ')}\n`;
-                    }
-                    response += '\n';
-                });
-            } else if (data.keyPoints) {
-                data.keyPoints.forEach(point => {
-                    response += `• ${point}\n`;
-                });
-                if (data.resources) {
-                    response += `\n*Recommended Resources*:\n`;
-                    data.resources.forEach(resource => {
-                        response += `- ${resource}\n`;
-                    });
-                }
-            } else if (data.methods) {
-                data.methods.forEach(method => {
-                    response += `• **${method.type}**: ${method.value}`;
-                    if (method.responseTime) {
-                        response += ` (typically responds within ${method.responseTime})`;
-                    }
-                    response += '\n';
-                });
-            }
-            
-            // Set conversation context
-            conversationContext.currentTopic = data.title.toLowerCase
-            return response;
-        }
+        let is // State
+let isTyping = false;
+let currentPanel = 'chat';
+let messageHistory = [];
 
-        // Handle Follow-up Questions
-        function handleFollowUpQuestion(topic) {
-            const lowerTopic = topic.toLowerCase();
-            
-            if (lowerTopic.includes('projects')) {
-                return "Would you like me to provide more technical details about any specific project? Or perhaps discuss the challenges faced during development?";
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    // Event Listeners
+    novaSend.addEventListener('click', sendMessage);
+    novaInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // Panel Switching
+    document.querySelectorAll('.nova-sidebar-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const panel = item.dataset.panel;
+            switchPanel(panel);
+        });
+    });
+
+    // Quick Replies
+    document.querySelectorAll('.quick-reply').forEach(reply => {
+        reply.addEventListener('click', () => {
+            const command = reply.dataset.command;
+            simulateUserQuestion(command);
+        });
+    });
+
+    // Dark Mode Toggle
+    toggleDarkMode.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        darkModeToggle.checked = !document.body.classList.contains('light-mode');
+    });
+
+    // Clear Chat
+    clearChat.addEventListener('click', clearChatHistory);
+    clearHistoryBtn.addEventListener('click', clearChatHistory);
+
+    // Code Theme
+    codeThemeSelect.addEventListener('change', updateCodeTheme);
+
+    // Initial Welcome Message
+    setTimeout(() => {
+        addMessage('bot', novaConfig.welcomeMessages[Math.floor(Math.random() * novaConfig.welcomeMessages.length)]);
+    }, 500);
+});
+
+// Functions
+function switchPanel(panel) {
+    currentPanel = panel;
+    Object.values(panels).forEach(p => p.classList.remove('active'));
+    panels[panel].classList.add('active');
+    
+    // Update panel title
+    const titles = {
+        chat: ['Interactive Coding', 'Ask me anything about programming'],
+        html: ['HTML Guide', 'HyperText Markup Language Resources'],
+        css: ['CSS Guide', 'Cascading Style Sheets Resources'],
+        js: ['JavaScript Guide', 'ECMAScript Resources'],
+        bootstrap: ['Bootstrap Guide', 'Front-end Framework Resources'],
+        backend: ['Backend Development', 'Server-side Programming Resources'],
+        frameworks: ['Frameworks', 'JavaScript Framework Resources'],
+        settings: ['Settings', 'Customize Your Experience']
+    };
+    
+    currentPanelTitle.textContent = titles[panel][0];
+    currentPanelSubtitle.textContent = titles[panel][1];
+}
+
+function addMessage(sender, content) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `nova-message nova-message-${sender}`;
+    messageDiv.innerHTML = content;
+    novaMessages.appendChild(messageDiv);
+    messageDiv.scrollIntoView({ behavior: 'smooth' });
+    
+    // Highlight code blocks
+    messageDiv.querySelectorAll('pre code').forEach(block => {
+        hljs.highlightElement(block);
+    });
+    
+    // Add copy functionality
+    messageDiv.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const code = btn.parentElement.nextElementSibling.innerText;
+            navigator.clipboard.writeText(code);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 2000);
+        });
+    });
+}
+
+async function sendMessage() {
+    const userInput = novaInput.value.trim();
+    if (!userInput) return;
+
+    novaInput.value = '';
+    addMessage('user', userInput);
+    showTypingIndicator();
+    
+    try {
+        const response = await mockAIResponse(userInput);
+        addMessage('bot', response);
+    } catch (error) {
+        const fallback = novaConfig.fallbackResponses[Math.floor(Math.random() * novaConfig.fallbackResponses.length)];
+        addMessage('bot', fallback);
+    }
+    
+    hideTypingIndicator();
+}
+
+async function mockAIResponse(query) {
+    // Simulated API call
+    return new Promise(resolve => {
+        setTimeout(() => {
+            const response = generateMockResponse(query);
+            resolve(response);
+        }, 1500);
+    });
+}
+
+function generateMockResponse(query) {
+    // Simple Q&A simulation
+    const responses = {
+        'Explain HTML structure': `Here's a basic HTML structure:
+            <div class="code-block">
+                <div class="code-header">
+                    <span>html</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- Content --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>`,
+        'Show CSS selectors': `CSS selectors examples:
+            <div class="code-block">
+                <div class="code-header">
+                    <span>css</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre><code class="language-css">/* Element selector */
+div { padding: 20px; }
+
+/* Class selector */
+.container { width: 100%; }
+
+/* ID selector */
+#main { margin: 0 auto; }</code></pre>
+            </div>`
+    };
+
+    return responses[query] || `I understand you're asking about "${query}". While I can't provide real answers in this demo, here's a sample response.`;
+}
+
+function showTypingIndicator() {
+    if (isTyping) return;
+    isTyping = true;
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'typing-indicator';
+    typingDiv.innerHTML = `
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+    `;
+    novaMessages.appendChild(typingDiv);
+    typingDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+function hideTypingIndicator() {
+    isTyping = false;
+    document.querySelector('.typing-indicator')?.remove();
+}
+
+function clearChatHistory() {
+    novaMessages.innerHTML = '';
+    messageHistory = [];
+}
+
+function updateCodeTheme() {
+    const theme = codeThemeSelect.value;
+    const link = document.querySelector('[href*="highlight.js"]');
+    link.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/${theme}.min.css`;
+}
+
+function simulateUserQuestion(question) {
+    novaInput.value = question;
+    sendMessage();
+}
+
+// Mobile Sidebar Toggle
+toggleSidebar.addEventListener('click', () => {
+    novaSidebar.classList.toggle('active');
+});
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 768 && 
+        !novaSidebar.contains(e.target) && 
+        !toggleSidebar.contains(e.target)) {
+        novaSidebar.classList.remove('active');
+    }
+});
+
+        // ... (existing JavaScript code from previous answer)
+
+        // Mobile Sidebar Toggle
+        toggleSidebar.addEventListener('click', () => {
+            novaSidebar.classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && 
+                !novaSidebar.contains(e.target) && 
+                !toggleSidebar.contains(e.target)) {
+                novaSidebar.classList.remove('active');
             }
-            
-            if (lowerTopic.includes('three.js') || lowerTopic.includes('3d')) {
-                return "I can elaborate on Three.js concepts like: rendering pipelines, performance optimization, shader programming, or 3D model preparation. What specifically interests you?";
-            }
-            
-            if (lowerTopic.includes('contact')) {
-                return "I can provide more detailed contact protocols, preferred communication methods, or typical response patterns. What additional contact information would be helpful?";
-            }
-            
-            return "I'd be happy to provide more details. Could you specify which aspect you'd like me to elaborate on?";
-        }
+        });
 
-        // Add Quick Replies
-        function addQuickReplies() {
-            const replies = [
-                "Show project examples",
-                "Explain Three.js concepts",
-                "Provide contact information",
-                "How does this AI work?"
-            ];
+        // Export Chat History
+        exportChatBtn.addEventListener('click', () => {
+            const chatContent = Array.from(novaMessages.children)
+                .map(msg => {
+                    const sender = msg.classList.contains('nova-message-user') ? 'User' : 'Nova';
+                    return `${sender}: ${msg.textContent}\n`;
+                })
+                .join('\n');
             
-            const container = document.createElement('div');
-            container.className = 'quick-replies';
-            
-            replies.forEach(reply => {
-                const button = document.createElement('div');
-                button.className = 'quick-reply';
-                button.textContent = reply;
-                button.addEventListener('click', () => {
-                    novaInput.value = reply;
-                    sendMessage();
-                });
-                container.appendChild(button);
-            });
-            
-            novaMessages.appendChild(container);
-            smartScrollToBottom();
-        }
+            const blob = new Blob([chatContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `nova-chat-${new Date().toISOString()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
 
-        // Helper Functions
-        function getRandomWelcome() {
-            return novaConfig.welcomeMessages[
-                Math.floor(Math.random() * novaConfig.welcomeMessages.length)
-            ];
-        }
+        // Handle Dark Mode Toggle
+        darkModeToggle.addEventListener('change', (e) => {
+            document.body.classList.toggle('light-mode', !e.target.checked);
+        });
 
-        function getRandomFallback() {
-            return novaConfig.fallbackResponses[
-                Math.floor(Math.random() * novaConfig.fallbackResponses.length)
-            ];
-        }
+        // Initialize Code Highlighting
+        hljs.configure({
+            cssSelector: 'pre code',
+            languages: ['javascript', 'html', 'css']
+        });
+        hljs.highlightAll();
 
-        function getTimeBasedGreeting() {
-            const hour = new Date().getHours();
-            if (hour < 12) return 'Good morning!';
-            if (hour < 18) return 'Good afternoon!';
-            return 'Good evening!';
-        }
+        // Preserve Chat History on Refresh
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('novaChatHistory', novaMessages.innerHTML);
+        });
 
-        // Initialize on DOM load
-        document.addEventListener('DOMContentLoaded', initNova);
+        // Load Previous Chat History
+        const savedHistory = localStorage.getItem('novaChatHistory');
+        if (savedHistory) {
+            novaMessages.innerHTML = savedHistory;
+            novaMessages.scrollTop = novaMessages.scrollHeight;
+        }
     </script>
 </body>
 </html>
